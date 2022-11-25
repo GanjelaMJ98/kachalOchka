@@ -1,0 +1,4 @@
+outs:
+- md5: 26640181ac1def5680afb76a594009d0
+  size: 649256
+  path: session-stat.parquet
