@@ -17,10 +17,7 @@ def main(data_path, model_path, result_path):
     model = PipelineModel.load(model_path)
     test_df = spark.read.parquet(data_path)
     prediction = model.transform(test_df)
-    prediction.select(["session_id","prediction"]).write.parquet(result_path)
-
-
-
+    prediction.select(["session_id", "prediction"]).write.parquet(result_path)
 
 
 def _spark_session():

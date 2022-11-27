@@ -25,28 +25,28 @@ def build_random_forest() -> RandomForestClassifier:
     rf = RandomForestClassifier(labelCol=LABEL_COL, featuresCol="features")
     return rf
 
+
 def build_gbt_classifier() -> GBTClassifier:
     gbt = GBTClassifier(labelCol=LABEL_COL, featuresCol="features", maxIter=10)
     return gbt
+
 
 def build_decision_tree() -> DecisionTreeClassifier:
     dt = DecisionTreeClassifier(labelCol=LABEL_COL, featuresCol="features")
     return dt
 
 
-
-
 def vector_assembler() -> VectorAssembler:
     features = ['user_type_index', 'platform_index', 'duration', 'item_info_events',
-                'select_item_events','make_order_events', 'events_per_min']
+                'select_item_events', 'make_order_events', 'events_per_min']
     va = VectorAssembler(inputCols=features, outputCol="features")
     return va
 
 
 def build_evaluator() -> MulticlassClassificationEvaluator:
     evaluator = MulticlassClassificationEvaluator(labelCol=LABEL_COL,
-                                                predictionCol="prediction",
-                                                metricName="accuracy")
+                                                  predictionCol="prediction",
+                                                  metricName="accuracy")
     return evaluator
 
 
@@ -56,9 +56,6 @@ def build_cv(rand_forest, evaluator, model_params) -> CrossValidator:
                         evaluator=evaluator,
                         parallelism=2)
     return cv
-
-
-    
 
 
 def process(spark, data_path, model_path):
@@ -92,10 +89,6 @@ def process(spark, data_path, model_path):
     print(f"Accuracy: {accuracy}")
 
     best.write().overwrite().save(model_path)
-
-
-
-
 
 
 def main(data_path, model_path):

@@ -22,6 +22,7 @@ is_credit_closed	                    Признак указывающий бы�
                                         выданные клиенту кредит (выплачен банку)
 '''
 
+
 def model_params(rf):
     return ParamGridBuilder() \
         .addGrid(rf.maxDepth, [2, 3, 4, 5]) \
@@ -32,14 +33,14 @@ def model_params(rf):
 def prepare_data(df: DataFrame, assembler) -> DataFrame:
     sex_index = StringIndexer(inputCol='sex', outputCol="sex_index")
     df = sex_index.fit(df).transform(df)
-    df = df.withColumn("is_married", df.married.cast(IntegerType()))    
+    df = df.withColumn("is_married", df.married.cast(IntegerType()))
     df = assembler.transform(df)
     return df
 
 
 def vector_assembler() -> VectorAssembler:
     features = ['age', 'sex_index', 'is_married', 'salary',
-                'successfully_credit_completed','credit_completed_amount',
+                'successfully_credit_completed', 'credit_completed_amount',
                 'active_credits', 'active_credits_amount', 'credit_amount']
     va = VectorAssembler(inputCols=features, outputCol="features")
     return va
@@ -52,16 +53,16 @@ def build_random_forest() -> RandomForestClassifier:
 
 def build_evaluator() -> MulticlassClassificationEvaluator:
     evaluator = MulticlassClassificationEvaluator(labelCol="is_credit_closed",
-                                                predictionCol="prediction",
-                                                metricName="accuracy")
+                                                  predictionCol="prediction",
+                                                  metricName="accuracy")
     return evaluator
 
 
 def build_tvs(rand_forest, evaluator, model_params) -> TrainValidationSplit:
     tvs = TrainValidationSplit(estimator=rand_forest,
-                            estimatorParamMaps=model_params,
-                            evaluator=evaluator,
-                            trainRatio=0.8)
+                               estimatorParamMaps=model_params,
+                               evaluator=evaluator,
+                               trainRatio=0.8)
     return tvs
 
 
@@ -79,7 +80,7 @@ def train_model(train_df, test_df) -> (RandomForestClassificationModel, float):
     print(f"Accuracy: {accuracy}")
     print(f'Model maxDepth: {best._java_obj.getMaxDepth()}')
     print(f'Model maxBins: {best._java_obj.getMaxBins()}')
-    return best, round(accuracy,2)
+    return best, round(accuracy, 2)
 
 
 if __name__ == "__main__":

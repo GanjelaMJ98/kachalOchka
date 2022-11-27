@@ -4,6 +4,7 @@ from pyspark.sql.functions import pandas_udf
 from pyspark.sql.types import StringType
 from pyspark.sql.functions import PandasUDFType
 
+
 @pandas_udf(StringType(), PandasUDFType.SCALAR)
 def card_number_mask(s: pd.Series) -> pd.Series:
     return s.str.slice_replace(start=4, stop=12, repl='XXXXXXXX')
